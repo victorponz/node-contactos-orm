@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+
+<div class="auth">
+  <h1>Crear cuenta</h1>
+
+  <% if (errors.length) { %>
+    <div class="alert alert-error"><ul><% errors.forEach((e) => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+
+  <form action="/register" method="post" class="form" novalidate>
+    <label>
+      Nombre
+      <input type="text" name="name" value="<%= values.name ?? '' %>" maxlength="100" autocomplete="name" required autofocus>
+    </label>
+    <label>
+      Email
+      <input type="email" name="email" value="<%= values.email ?? '' %>" autocomplete="email" required>
+    </label>
+    <label>
+      Contraseña <small class="muted">(mínimo 8 caracteres)</small>
+      <input type="password" name="password" minlength="8" autocomplete="new-password" required>
+    </label>
+    <label>
+      Repite la contraseña
+      <input type="password" name="password_confirm" autocomplete="new-password" required>
+    </label>
+    <button type="submit" class="btn btn-primary">Crear cuenta</button>
+  </form>
+
+  <p class="muted">¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,7 @@
+<%- include('partials/header') %>
+
+<h1>Error <%= status %></h1>
+<p class="alert alert-error"><%= Array.isArray(message) ? message.join(', ') : message %></p>
+<p><a href="/contacts" class="btn">← Volver al listado</a></p>
+
+<%- include('partials/footer') %>

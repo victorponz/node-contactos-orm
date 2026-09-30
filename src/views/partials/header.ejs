@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> · Agenda</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="/contacts" class="brand">📇 Agenda</a>
+    <nav class="nav">
+      <% if (locals.user) { %>
+        <span class="muted">Hola, <strong><%= user.name %></strong></span>
+        <form action="/logout" method="post">
+          <button type="submit" class="btn">Cerrar sesión</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="btn">Iniciar sesión</a>
+        <a href="/register" class="btn btn-primary">Crear cuenta</a>
+      <% } %>
+    </nav>
+  </header>
+  <main class="container">

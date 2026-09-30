@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<div class="auth">
+  <h1>Iniciar sesión</h1>
+
+  <% if (loggedOut) { %><p class="alert alert-success">Has cerrado la sesión.</p><% } %>
+  <% if (errors.length) { %>
+    <div class="alert alert-error"><ul><% errors.forEach((e) => { %><li><%= e %></li><% }) %></ul></div>
+  <% } %>
+
+  <form action="/login" method="post" class="form" novalidate>
+    <input type="hidden" name="next" value="<%= next %>">
+    <label>
+      Email
+      <input type="email" name="email" value="<%= values.email ?? '' %>" autocomplete="email" required autofocus>
+    </label>
+    <label>
+      Contraseña
+      <input type="password" name="password" autocomplete="current-password" required>
+    </label>
+    <button type="submit" class="btn btn-primary">Entrar</button>
+  </form>
+
+  <p class="muted">¿No tienes cuenta? <a href="/register">Regístrate</a></p>
+</div>
+
+<%- include('../partials/footer') %>

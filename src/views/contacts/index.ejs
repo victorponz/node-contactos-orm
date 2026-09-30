@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Contactos</h1>
+  <a href="/contacts/new" class="btn btn-primary">+ Nuevo contacto</a>
+</div>
+
+<% if (message) { %>
+  <p class="alert alert-success"><%= message %></p>
+<% } %>
+
+<% if (contacts.length === 0) { %>
+  <p class="empty">Todavía no hay contactos.</p>
+<% } else { %>
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Email</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% contacts.forEach((c) => { %>
+        <tr>
+          <td><%= c.id %></td>
+          <td><%= c.name %></td>
+          <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
+          <td class="actions">
+            <a href="/contacts/<%= c.id %>/edit" class="btn">Editar</a>
+            <form action="/contacts/<%= c.id %>/delete" method="post"
+                  onsubmit="return confirm('¿Eliminar a <%= c.name.replace(/'/g, '') %>?')">
+              <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/footer') %>

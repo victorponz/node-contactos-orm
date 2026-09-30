@@ -1,0 +1,28 @@
+<%- include('../partials/header') %>
+
+<h1><%= title %></h1>
+
+<% if (errors.length) { %>
+  <div class="alert alert-error">
+    <ul>
+      <% errors.forEach((e) => { %><li><%= e %></li><% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<form action="<%= action %>" method="post" class="form" novalidate>
+  <label>
+    Nombre
+    <input type="text" name="name" value="<%= contact.name ?? '' %>" maxlength="100" required autofocus>
+  </label>
+  <label>
+    Email
+    <input type="email" name="email" value="<%= contact.email ?? '' %>" required>
+  </label>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="/contacts" class="btn">Cancelar</a>
+  </div>
+</form>
+
+<%- include('../partials/footer') %>
