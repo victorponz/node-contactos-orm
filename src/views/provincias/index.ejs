@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="page-head">
-  <h1>Provincias</h1>
+  <h1>Provincias<% if (pais) { %> de <%= pais.nombre %><% } %></h1>
   <a href="/provincias/new" class="btn btn-primary">+ Nueva provincia</a>
 </div>
 
@@ -12,18 +12,23 @@
   <p class="alert alert-error"><%= error %></p>
 <% } %>
 
+<% if (pais) { %>
+  <p><a href="/provincias">← Ver todas las provincias</a></p>
+<% } %>
+
 <% if (provincias.length === 0) { %>
   <p class="empty">Todavía no hay provincias.</p>
 <% } else { %>
   <table class="table">
     <thead>
-      <tr><th>ID</th><th>Nombre</th><th>Contactos</th><th></th></tr>
+      <tr><th>ID</th><th>Nombre</th><th>País</th><th>Contactos</th><th></th></tr>
     </thead>
     <tbody>
       <% provincias.forEach((p) => { %>
         <tr>
           <td><%= p.id %></td>
           <td><%= p.nombre %></td>
+          <td><%= p.pais?.nombre ?? '—' %></td>
           <td><a href="/contacts?provincia=<%= p.id %>"><%= p.numContactos %></a></td>
           <td class="actions">
             <a href="/provincias/<%= p.id %>/edit" class="btn">Editar</a>

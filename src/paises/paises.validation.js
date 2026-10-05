@@ -1,9 +1,9 @@
 import { HttpError } from '../errors.js';
 
-const ALLOWED = ['nombre', 'paisId'];
+const ALLOWED = ['nombre'];
 
 // partial = true para PATCH (todos los campos opcionales)
-export function validateProvincia(body, { partial = false } = {}) {
+export function validatePais(body, { partial = false } = {}) {
   if (typeof body !== 'object' || body === null || Array.isArray(body)) {
     throw new HttpError(400, 'Body must be a JSON object');
   }
@@ -19,18 +19,7 @@ export function validateProvincia(body, { partial = false } = {}) {
     else if (body.nombre.length > 100) errors.push('nombre must be at most 100 characters');
   }
 
-  // paisId es opcional: un entero positivo, o null / '' para dejar la provincia sin país.
-  // Desde un formulario HTML llega como texto ("3"), desde la API como número (3).
-  let paisId = body.paisId;
-  if (paisId === '' || paisId === null) paisId = null;
-  else if (paisId !== undefined) {
-    paisId = Number(paisId);
-    if (!Number.isInteger(paisId) || paisId < 1) errors.push('paisId must be a positive integer or null');
-  }
-
   if (errors.length) throw new HttpError(400, errors);
 
-  const data = body.nombre === undefined ? {} : { nombre: body.nombre.trim() };
-  if (paisId !== undefined) data.paisId = paisId;
-  return data;
+  return body.nombre === undefined ? {} : { nombre: body.nombre.trim() };
 }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { parseId } from '../contacts/contacts.validation.js';
 import { HttpError } from '../errors.js';
+import * as paises from '../paises/paises.service.js';
 import * as service from './provincias.service.js';
 import { validateProvincia } from './provincias.validation.js';
 
@@ -16,27 +17,35 @@ const ERRORS = {
   'in-use': 'No se puede eliminar una provincia que tiene contactos.',
 };
 
-function renderFormOnError(res, err, view) {
+// El formulario necesita la lista de países para el <select>
+async function renderForm(res, view, status = 200) {
+  res.status(status).render('provincias/form', { errors: [], ...view, paises: await paises.findAll() });
+}
+
+async function renderFormOnError(res, err, view) {
   if (err instanceof HttpError && (err.status === 400 || err.status === 409)) {
-    return res.status(err.status).render('provincias/form', {
-      ...view,
-      errors: err.details ?? [err.message],
-    });
+    return renderForm(res, { ...view, errors: err.details ?? [err.message] }, err.status);
   }
   throw err;
 }
 
+// Valores del formulario a partir del body recibido
+const fromBody = (body) => ({ nombre: body.nombre, paisId: body.paisId });
+
 router.get('/', async (req, res) => {
+  // ?pais=3 filtra las provincias de ese país
+  const pais = req.query.pais ? await paises.findOne(parseId(req.query.pais)) : undefined;
   res.render('provincias/index', {
     title: 'Provincias',
-    provincias: await service.findAll(),
+    provincias: await service.findAll({ paisId: pais?.id }),
+    pais,
     message: MESSAGES[req.query.msg],
     error: ERRORS[req.query.error],
   });
 });
 
-router.get('/new', (req, res) => {
-  res.render('provincias/form', { title: 'Nueva provincia', provincia: {}, action: '/provincias', errors: [] });
+router.get('/new', async (req, res) => {
+  await renderForm(res, { title: 'Nueva provincia', provincia: {}, action: '/provincias' });
 });
 
 router.post('/', async (req, res) => {
@@ -44,14 +53,16 @@ router.post('/', async (req, res) => {
     await service.create(validateProvincia(req.body));
     res.redirect('/provincias?msg=created');
   } catch (err) {
-    renderFormOnError(res, err, { title: 'Nueva provincia', provincia: req.body, action: '/provincias' });
+    await renderFormOnError(res, err, { title: 'Nueva provincia', provincia: fromBody(req.body), action: '/provincias' });
   }
 });
 
 router.get('/:id/edit', async (req, res) => {
   const provincia = await service.findOne(parseId(req.params.id));
-  res.render('provincias/form', {
-    title: 'Editar provincia', provincia, action: `/provincias/${provincia.id}/edit`, errors: [],
+  await renderForm(res, {
+    title: 'Editar provincia',
+    provincia: { ...provincia, paisId: provincia.pais?.id },
+    action: `/provincias/${provincia.id}/edit`,
   });
 });
 
@@ -61,8 +72,8 @@ router.post('/:id/edit', async (req, res) => {
     await service.update(id, validateProvincia(req.body));
     res.redirect('/provincias?msg=updated');
   } catch (err) {
-    renderFormOnError(res, err, {
-      title: 'Editar provincia', provincia: { id, ...req.body }, action: `/provincias/${id}/edit`,
+    await renderFormOnError(res, err, {
+      title: 'Editar provincia', provincia: { id, ...fromBody(req.body) }, action: `/provincias/${id}/edit`,
     });
   }
 });

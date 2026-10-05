@@ -13,20 +13,11 @@
 <form action="<%= action %>" method="post" class="form" novalidate>
   <label>
     Nombre
-    <input type="text" name="nombre" value="<%= provincia.nombre ?? '' %>" maxlength="100" required autofocus>
-  </label>
-  <label>
-    País
-    <select name="paisId">
-      <option value="">— Sin país —</option>
-      <% paises.forEach((p) => { %>
-        <option value="<%= p.id %>" <%= String(p.id) === String(provincia.paisId) ? 'selected' : '' %>><%= p.nombre %></option>
-      <% }) %>
-    </select>
+    <input type="text" name="nombre" value="<%= pais.nombre ?? '' %>" maxlength="100" required autofocus>
   </label>
   <div class="form-actions">
     <button type="submit" class="btn btn-primary">Guardar</button>
-    <a href="/provincias" class="btn">Cancelar</a>
+    <a href="/paises" class="btn">Cancelar</a>
   </div>
 </form>
 

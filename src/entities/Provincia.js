@@ -6,9 +6,9 @@ export class Provincia {
   }
 }
 
-// Lado "1" de la relación 1:N: una provincia tiene muchos contactos.
-// La clave ajena (provincia_id) vive en la tabla contact, no aquí;
-// por eso esta relación es solo la inversa de la que define Contact.
+// Provincia participa en dos relaciones 1:N:
+//  - es el lado "1" frente a Contact (una provincia tiene muchos contactos)
+//  - es el lado "N" frente a Pais (muchas provincias pertenecen a un país)
 export const ProvinciaSchema = new EntitySchema({
   name: 'Provincia',
   target: Provincia,
@@ -18,10 +18,21 @@ export const ProvinciaSchema = new EntitySchema({
     nombre: { type: 'varchar', length: 100, unique: true },
   },
   relations: {
+    // Inversa de Contact.provincia: la clave ajena (provincia_id) vive en la tabla contact
     contactos: {
       type: 'one-to-many',
       target: 'Contact',
       inverseSide: 'provincia', // propiedad de Contact que apunta aquí
+    },
+    // Lado "N" de la relación con Pais: muchas provincias pertenecen a un país.
+    // Crea la columna pais_id (clave ajena) en la tabla provincia.
+    pais: {
+      type: 'many-to-one',
+      target: 'Pais',
+      inverseSide: 'provincias', // propiedad de Pais que apunta aquí
+      joinColumn: { name: 'pais_id' },
+      nullable: true,        // una provincia puede no tener país
+      onDelete: 'RESTRICT',  // no se puede borrar un país con provincias
     },
   },
 });

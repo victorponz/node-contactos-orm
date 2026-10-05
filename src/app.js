@@ -7,6 +7,9 @@ import contactsApi from './contacts/contacts.api.js';
 import contactsWeb from './contacts/contacts.web.js';
 import provinciasApi from './provincias/provincias.api.js';
 import provinciasWeb from './provincias/provincias.web.js';
+import paisesApi from './paises/paises.api.js';
+import paisesWeb from './paises/paises.web.js';
+
 import { errorHandler, notFound } from './errors.js';
 
 const app = express();
@@ -45,6 +48,8 @@ app.use('/api/contacts', requireAuth, contactsApi);       // protegido: 401 sin 
 app.use('/contacts', requireAuth, contactsWeb);           // protegido: redirige a /login
 app.use('/api/provincias', requireAuth, provinciasApi);
 app.use('/provincias', requireAuth, provinciasWeb);
+app.use('/api/paises', requireAuth, paisesApi);
+app.use('/paises', requireAuth, paisesWeb);
 
 app.use(notFound);
 app.use(errorHandler);
