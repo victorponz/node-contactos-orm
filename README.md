@@ -17,12 +17,34 @@ Las tablas se crean automáticamente a partir de las entidades (`synchronize: tr
 ## Entidades
 
     src/entities/
-      Contact.js    clase Contact  + ContactSchema  -> tabla contact (id, name, email)
+      Contact.js    clase Contact  + ContactSchema  -> tabla contact (id, name, email, provincia_id)
+      Provincia.js  clase Provincia + ProvinciaSchema -> tabla provincia (id, nombre)
       User.js       clase User     + UserSchema     -> tabla user (id, name, email, password_hash, created_at)
 
 Cada entidad es una clase JavaScript normal más un `EntitySchema` que describe su
 mapeo a la tabla. En TypeScript se haría con decoradores (@Entity, @Column...),
 pero el resultado es el mismo.
+
+## Relación 1:N Provincia -> Contactos
+
+Una provincia tiene muchos contactos y cada contacto pertenece (opcionalmente) a una
+provincia. En `Contact` la relación es `many-to-one` (crea la clave ajena
+`provincia_id`); en `Provincia` es la inversa `one-to-many` (`contactos`).
+
+    await repo.find({ relations: { provincia: true } });          // contactos con su provincia (LEFT JOIN)
+    await provRepo.findOne({ where: { id }, relations: { contactos: true } }); // provincia con sus contactos
+
+No se puede borrar una provincia que tenga contactos (409).
+
+## API
+
+    GET    /api/provincias         lista con numContactos
+    GET    /api/provincias/:id     provincia con sus contactos
+    POST   /api/provincias         { "nombre": "Alicante" }
+    PATCH  /api/provincias/:id     { "nombre": "..." }
+    DELETE /api/provincias/:id     409 si tiene contactos
+
+    POST/PATCH /api/contacts admiten "provinciaId": 3 (o null para quitarla)
 
 ## Operaciones con el repositorio
 
@@ -42,8 +64,9 @@ Pon `logging: true` en `src/data-source.js` para ver en consola el SQL que gener
       server.js                  inicializa la base de datos y arranca el servidor
       app.js                     Express: vistas, sesiones, middlewares, routers
       data-source.js             configuración de TypeORM
-      entities/                  Contact, User
+      entities/                  Contact, Provincia, User
       contacts/                  servicio (repositorio), validación, rutas web y API
+      provincias/                servicio (repositorio), validación, rutas web y API
       auth/                      servicio (repositorio + bcrypt), validación, middlewares, rutas
       views/                     plantillas EJS
       public/styles.css

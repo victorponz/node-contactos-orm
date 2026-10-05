@@ -20,4 +20,16 @@ export const ContactSchema = new EntitySchema({
     name:  { type: 'varchar', length: 100 },
     email: { type: 'varchar', unique: true },
   },
+  relations: {
+    // Lado "N" de la relación: muchos contactos pertenecen a una provincia.
+    // Crea la columna provincia_id (clave ajena) en la tabla contact.
+    provincia: {
+      type: 'many-to-one',
+      target: 'Provincia',
+      inverseSide: 'contactos',
+      joinColumn: { name: 'provincia_id' },
+      nullable: true,        // un contacto puede no tener provincia
+      onDelete: 'RESTRICT',  // no se puede borrar una provincia con contactos
+    },
+  },
 });

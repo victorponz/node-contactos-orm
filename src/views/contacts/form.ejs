@@ -19,6 +19,15 @@
     Email
     <input type="email" name="email" value="<%= contact.email ?? '' %>" required>
   </label>
+  <label>
+    Provincia
+    <select name="provinciaId">
+      <option value="">— Sin provincia —</option>
+      <% provincias.forEach((p) => { %>
+        <option value="<%= p.id %>" <%= String(p.id) === String(contact.provinciaId) ? 'selected' : '' %>><%= p.nombre %></option>
+      <% }) %>
+    </select>
+  </label>
   <div class="form-actions">
     <button type="submit" class="btn btn-primary">Guardar</button>
     <a href="/contacts" class="btn">Cancelar</a>

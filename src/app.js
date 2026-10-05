@@ -5,6 +5,8 @@ import { loadUser, requireAuth } from './auth/auth.middleware.js';
 import authWeb from './auth/auth.web.js';
 import contactsApi from './contacts/contacts.api.js';
 import contactsWeb from './contacts/contacts.web.js';
+import provinciasApi from './provincias/provincias.api.js';
+import provinciasWeb from './provincias/provincias.web.js';
 import { errorHandler, notFound } from './errors.js';
 
 const app = express();
@@ -41,6 +43,8 @@ app.get('/', (req, res) => res.redirect('/contacts'));
 app.use('/', authWeb);                                    // /register, /login, /logout
 app.use('/api/contacts', requireAuth, contactsApi);       // protegido: 401 sin sesión
 app.use('/contacts', requireAuth, contactsWeb);           // protegido: redirige a /login
+app.use('/api/provincias', requireAuth, provinciasApi);
+app.use('/provincias', requireAuth, provinciasWeb);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -1,0 +1,24 @@
+<%- include('../partials/header') %>
+
+<h1><%= title %></h1>
+
+<% if (errors.length) { %>
+  <div class="alert alert-error">
+    <ul>
+      <% errors.forEach((e) => { %><li><%= e %></li><% }) %>
+    </ul>
+  </div>
+<% } %>
+
+<form action="<%= action %>" method="post" class="form" novalidate>
+  <label>
+    Nombre
+    <input type="text" name="nombre" value="<%= provincia.nombre ?? '' %>" maxlength="100" required autofocus>
+  </label>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="/provincias" class="btn">Cancelar</a>
+  </div>
+</form>
+
+<%- include('../partials/footer') %>

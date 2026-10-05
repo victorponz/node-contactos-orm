@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<div class="page-head">
+  <h1>Provincias</h1>
+  <a href="/provincias/new" class="btn btn-primary">+ Nueva provincia</a>
+</div>
+
+<% if (message) { %>
+  <p class="alert alert-success"><%= message %></p>
+<% } %>
+<% if (error) { %>
+  <p class="alert alert-error"><%= error %></p>
+<% } %>
+
+<% if (provincias.length === 0) { %>
+  <p class="empty">Todavía no hay provincias.</p>
+<% } else { %>
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Contactos</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% provincias.forEach((p) => { %>
+        <tr>
+          <td><%= p.id %></td>
+          <td><%= p.nombre %></td>
+          <td><a href="/contacts?provincia=<%= p.id %>"><%= p.numContactos %></a></td>
+          <td class="actions">
+            <a href="/provincias/<%= p.id %>/edit" class="btn">Editar</a>
+            <form action="/provincias/<%= p.id %>/delete" method="post"
+                  onsubmit="return confirm('¿Eliminar <%= p.nombre.replace(/'/g, '') %>?')">
+              <button type="submit" class="btn btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+<% } %>
+
+<%- include('../partials/footer') %>

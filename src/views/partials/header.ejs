@@ -11,6 +11,8 @@
     <a href="/contacts" class="brand">📇 Agenda</a>
     <nav class="nav">
       <% if (locals.user) { %>
+        <a href="/contacts" class="btn">Contactos</a>
+        <a href="/provincias" class="btn">Provincias</a>
         <span class="muted">Hola, <strong><%= user.name %></strong></span>
         <form action="/logout" method="post">
           <button type="submit" class="btn">Cerrar sesión</button>

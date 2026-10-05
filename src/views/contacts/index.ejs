@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 
 <div class="page-head">
-  <h1>Contactos</h1>
+  <h1>Contactos<% if (provincia) { %> de <%= provincia.nombre %><% } %></h1>
   <a href="/contacts/new" class="btn btn-primary">+ Nuevo contacto</a>
 </div>
 
@@ -9,12 +9,16 @@
   <p class="alert alert-success"><%= message %></p>
 <% } %>
 
+<% if (provincia) { %>
+  <p><a href="/contacts">← Ver todos los contactos</a></p>
+<% } %>
+
 <% if (contacts.length === 0) { %>
   <p class="empty">Todavía no hay contactos.</p>
 <% } else { %>
   <table class="table">
     <thead>
-      <tr><th>ID</th><th>Nombre</th><th>Email</th><th></th></tr>
+      <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Provincia</th><th></th></tr>
     </thead>
     <tbody>
       <% contacts.forEach((c) => { %>
@@ -22,6 +26,7 @@
           <td><%= c.id %></td>
           <td><%= c.name %></td>
           <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
+          <td><%= c.provincia?.nombre ?? '—' %></td>
           <td class="actions">
             <a href="/contacts/<%= c.id %>/edit" class="btn">Editar</a>
             <form action="/contacts/<%= c.id %>/delete" method="post"
