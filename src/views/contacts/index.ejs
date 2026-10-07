@@ -18,7 +18,7 @@
 <% } else { %>
   <table class="table">
     <thead>
-      <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Provincia</th><th></th></tr>
+      <tr><th>ID</th><th>Nombre</th><th>Email</th><th>Provincia</th><th>País</th><th></th></tr>
     </thead>
     <tbody>
       <% contacts.forEach((c) => { %>
@@ -27,6 +27,7 @@
           <td><%= c.name %></td>
           <td><a href="mailto:<%= c.email %>"><%= c.email %></a></td>
           <td><%= c.provincia?.nombre ?? '—' %></td>
+          <td><%= c.provincia?.pais?.nombre ?? '—' %></td>
           <td class="actions">
             <a href="/contacts/<%= c.id %>/edit" class="btn">Editar</a>
             <form action="/contacts/<%= c.id %>/delete" method="post"

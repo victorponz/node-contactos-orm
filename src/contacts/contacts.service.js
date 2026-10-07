@@ -24,11 +24,12 @@ async function findProvincia(provinciaId) {
   return provincia;
 }
 
-// relations: { provincia: true } hace un LEFT JOIN y rellena contact.provincia
+// relations hace un LEFT JOIN y rellena contact.provincia; anidando { pais: true }
+// se hace otro JOIN más y se rellena también contact.provincia.pais
 export function findAll({ provinciaId } = {}) {
   return repo().find({
     where: provinciaId ? { provincia: { id: provinciaId } } : {},
-    relations: { provincia: true },
+    relations: { provincia: { pais: true } },
     order: { id: 'ASC' },
   });
 }
